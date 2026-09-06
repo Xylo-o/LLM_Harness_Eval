@@ -29,7 +29,7 @@ That's why I wanted to make the process more automated.
 Requires **Python 3.10+** and an OpenAI API key.
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/Harness_eval_demo.git
+git clone https://github.com/Xylo-o/LLM_Harness_Eval.git
 cd Harness_eval_demo
 
 python -m venv .venv
