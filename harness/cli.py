@@ -26,9 +26,14 @@ def main():
 
     tests_passed = True
 
-    for case_id, scorer_type, passed, detail in results:
-        if not passed:
+    for case in results:
+        if case.error:
             tests_passed = False
+            continue
+
+        for score in case.scores:
+            if not score.passed:
+                tests_passed = False
 
     sys.exit(0 if tests_passed else 1)
 
