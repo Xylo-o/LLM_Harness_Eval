@@ -38,7 +38,12 @@ class OpenAIProvider:
         latency = (stop - start) * 1000
         tokens_in = response.usage.prompt_tokens
         tokens_out = response.usage.completion_tokens
-        payload = {"text": text}
+        payload = {
+            "text": response.choices[0].message.content,
+            "latency_ms": int((stop - start) * 1000),
+            "tokens_in": response.usage.prompt_tokens,
+            "tokens_out": response.usage.completion_tokens,
+        }
         put(self.model, prompt, payload)
-        return ModelResponse(text=text, latency_ms=latency, tokens_in=tokens_in, tokens_out=tokens_out)
+        return ModelResponse(**payload)
 
