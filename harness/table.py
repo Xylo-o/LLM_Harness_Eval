@@ -7,8 +7,12 @@ def print_table(results):
     table.add_column("Scorer")
     table.add_column("Result")
 
-    for case_id, scorer_type, passed, detail in results:
-        result = "[green]PASS[/green]" if passed else "[red]FAIL[/red]"
-        table.add_row(case_id, scorer_type, result)
+    for case in results:
+        if case.error:
+            table.add_row(case.case_key, "-", f"[yellow]ERROR[/yellow] {case.error[:60]}")
+            continue
+        for score in case.scores:
+            status = "[green]PASS[/green]" if score.passed else "[red]FAIL[/red]"
+            table.add_row(case.case_key, score.scorer_name, status)
 
     Console().print(table)
