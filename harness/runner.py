@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from .providers import OpenAIProvider
 from .scorers import SCORERS
 
@@ -24,17 +24,26 @@ class ScoreResult:
 def runner(suite: str, model: str):
     provider = OpenAIProvider(model=model)
     results = []
-    scores = []
     for case in suite.cases:
         error = ""
         try:
             response = provider.complete(case.prompt)
         except Exception as e:
-            error = str(e)
-            response.text = ""
+            results.append(CaseResult(case_key=case.id, prompt=case.prompt, scorer_config=case.scorers, error=str(e),))
             continue
+        scores = []
         for cfg in case.scorers:
             passed, detail = SCORERS[cfg["type"]](response.text, cfg)
-            scores.append(passed, detail)
-        results.append(CaseResult(case_key=case.id, response=response.text, latency_ms=response.latency_ms, tokens_in=response.tokens_in, tokens_out=response.tokens_out, error=error))                   
+            scores.append(ScoreResult(scorer_name=cfg["type"], passed=passed, detail=detail))
+        results.append(
+            CaseResult(
+                case_key=case.id,
+                prompt=case.prompt,
+                scorer_config=case.scorers,
+                response=response.text,
+                latency_ms=response.latency_ms,
+                tokens_in=response.tokens_in,
+                tokens_out=response.tokens_out,
+            )
+        )                   
     return results
