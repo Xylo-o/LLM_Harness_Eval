@@ -27,7 +27,7 @@ class OpenAIProvider:
         if cached is not None:
             return ModelResponse(
                 text=cached["text"],
-                latency_ms=cached["latency"],
+                latency_ms=cached["latency_ms"],
                 tokens_in=cached["tokens_in"],
                 tokens_out=cached["tokens_out"],
                 )
