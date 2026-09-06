@@ -74,7 +74,7 @@ harness can be dropped into CI as-is.
 | Flag | Required | Default | What it does |
 |---|---|---|---|
 | `--suite` | yes | — | Path to the suite YAML file |
-| `--model` | no | `gpt-5.4-mini` | Model name passed to the provider |
+| `--model` | no | `gpt-5.6-luna` | Model name passed to the provider |
 | `--no-cache` | no | off | *Parsed but not wired up yet — see [Known limitations](#known-limitations)* |
 | `--timeout` | no | — | *Parsed but not wired up yet — see [Known limitations](#known-limitations)* |
 
@@ -87,12 +87,14 @@ response, run every scorer attached to that case against it.
 
 | Module | Responsibility |
 |---|---|
-| `harness/cli.py` | Parses arguments, drives the run, sets the exit code |
-| `harness/suite.py` | Reads the YAML file into `Suite` / `TestCase` dataclasses |
-| `harness/providers.py` | Talks to the model API, returns a `ModelResponse` |
 | `harness/cache.py` | Reads and writes responses to `.cache/` on disk |
+| `harness/cli.py` | Parses arguments, drives the run, sets the exit code |
+| `harness/db.py` | Structure initialization of the database |
+| `harness/providers.py` | Talks to the model API, returns a `ModelResponse` |
 | `harness/runner.py` | The main loop: case → response → scorers → results |
 | `harness/scorers.py` | The scorer functions and the `SCORERS` registry |
+| `harness/store.py` | Saves the previous run of the model with `save_run` |
+| `harness/suite.py` | Reads the YAML file into `Suite` / `TestCase` dataclasses |
 | `harness/table.py` | Renders the results table with `rich` |
 
 A scorer is just a function `(response_text, config) -> (passed, detail)`,
@@ -170,12 +172,14 @@ Harness_eval_demo/
 ├── harness/
 │   ├── __init__.py
 │   ├── __main__.py       # entry point for `python -m harness`
-│   ├── cli.py            # argument parsing, exit code
-│   ├── providers.py      # model API client + ModelResponse
 │   ├── cache.py          # on-disk response cache
-│   ├── suite.py          # YAML loading
+│   ├── cli.py            # argument parsing, exit code
+|   ├── db.py             # database creation
+│   ├── providers.py      # model API client + ModelResponse
 │   ├── runner.py         # main loop
 │   ├── scorers.py        # scorer functions + registry
+|   ├── store.py          # store previous runs
+│   ├── suite.py          # YAML loading
 │   └── table.py          # rich output
 ├── suites/
 │   └── basic.yaml        # 6 example cases
