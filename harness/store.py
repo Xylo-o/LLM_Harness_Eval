@@ -5,7 +5,7 @@ from harness.db import Run, TestCase, Result, Score, engine
 
 def save_run(suite_name, model_name, model_version, results):
     with Session(engine) as session:
-        run = Run(suite_name, model_name, model_version)
+        run = Run(suite_name=suite_name, model_name=model_name, model_version=model_version,)
         session.add(run)
         session.flush()
 
