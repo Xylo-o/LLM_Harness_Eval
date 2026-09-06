@@ -68,7 +68,7 @@ class FailureLabel(Base):
     category: Mapped[str]
     note: Mapped[str | None]
 
-engine = create_engine(os.getenv("DATABASE_URL", "sqlite:///harness.db"), echo=True)
+engine = create_engine(os.getenv("DATABASE_URL", "sqlite:///harness.db"))
 
 def init_db():
     Base.metadata.create_all(engine)

@@ -3,6 +3,12 @@ from .providers import OpenAIProvider
 from .scorers import SCORERS
 
 @dataclass
+class ScoreResult:
+    scorer_name: str
+    passed: bool
+    detail: dict
+
+@dataclass
 class CaseResult:
     case_key: str
     prompt: str
@@ -14,18 +20,11 @@ class CaseResult:
     error: str | None = None
     scores: list = field(default_factory=list)
 
-@dataclass
-class ScoreResult:
-    scorer_name: str
-    passed: bool
-    detail: dict
 
-
-def runner(suite: str, model: str):
+def runner(suite, model: str):
     provider = OpenAIProvider(model=model)
     results = []
     for case in suite.cases:
-        error = ""
         try:
             response = provider.complete(case.prompt)
         except Exception as e:
@@ -44,6 +43,7 @@ def runner(suite: str, model: str):
                 latency_ms=response.latency_ms,
                 tokens_in=response.tokens_in,
                 tokens_out=response.tokens_out,
+                scores=scores,
             )
         )                   
     return results
