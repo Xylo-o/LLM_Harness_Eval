@@ -4,3 +4,4 @@ openai==1.99.9
 PyYAML==6.0.3
 rich==15.0.0
 pytest==7.4.0
+pydantic==2.13.4
