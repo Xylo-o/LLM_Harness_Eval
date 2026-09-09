@@ -1,5 +1,14 @@
-from pydantic import BaseModel, Field
 from enum import Enum
+from pathlib import Path
+from string import Template
+from pydantic import BaseModel, Field
+
+PROMPTS_DIR = Path(__file__).parent.parent / "prompts"
+RUBRIC_VERSION = "v1"
+
+SYSTEM = (PROMPTS_DIR / f"judge_{RUBRIC_VERSION}.system.txt").read_text(encoding="utf-8")
+USER_TEMPLATE = Template((PROMPTS_DIR / f"judge_{RUBRIC_VERSION}.user.txt").read_text(encoding="utf-8"))
+
 
 class Status(str, Enum):
     PASS = "PASS"
